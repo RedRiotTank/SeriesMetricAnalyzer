@@ -8,33 +8,33 @@ import java.util.Date;
 
 public class EpisodeDataModel {
 
-    private int episode_id;
-    private String spoken_words;
-    private ArrayList character_list;
-    private float imdb_rating;
-    private float imdb_votes;
-    private int number_in_season;
-    private Date original_air_date;
-    private int original_air_year;
-    private int seasson;
-    private String title;
-    private float us_viewers_in_millions;
-    private float views;
+    private final int episode_id;
+    private final String spoken_words;
+    private final ArrayList<String> character_list;
+    private final float imdb_rating;
+    private final float imdb_votes;
+    private final int number_in_season;
+    private final Date original_air_date;
+    private final int original_air_year;
+    private final int season;
+    private final String title;
+    private final float us_viewers_in_millions;
+    private final float views;
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     EpisodeDataModel(String[] data) throws ParseException {
 
 
         this.episode_id = Integer.parseInt(data[1]);
         this.spoken_words = data[2];
-        this.character_list = new ArrayList(Arrays.asList(data[3].split(",")));
+        this.character_list = new ArrayList<>(Arrays.asList(data[3].split(",")));
         this.imdb_rating = Float.parseFloat(data[4]);
         this.imdb_votes = Float.parseFloat(data[5]);
         this.number_in_season = Integer.parseInt(data[6]);
         this.original_air_date = dateFormat.parse(data[7]);
         this.original_air_year = Integer.parseInt(data[8]);
-        this.seasson = Integer.parseInt(data[9]);
+        this.season = Integer.parseInt(data[9]);
         this.title = data[10];
         this.us_viewers_in_millions = Float.parseFloat(data[11]);
         this.views = Float.parseFloat(data[12]);
@@ -48,7 +48,7 @@ public class EpisodeDataModel {
         return spoken_words;
     }
 
-    public ArrayList getCharacter_list() {
+    public ArrayList<String> getCharacter_list() {
         return character_list;
     }
 
@@ -72,8 +72,8 @@ public class EpisodeDataModel {
         return original_air_year;
     }
 
-    public int getSeasson() {
-        return seasson;
+    public int getSeason() {
+        return season;
     }
 
     public String getTitle() {

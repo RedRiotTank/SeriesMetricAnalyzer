@@ -2,12 +2,9 @@ package org.htt;
 
 import console.ConsoleProcessor;
 import csvmetricprocessor.CsvMetricProcessor;
-import csvmetricprocessor.EpisodeDataModel;
 import files.FileProcessor;
 
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Set;
 
 import static console.ConsoleProcessor.*;
 
@@ -31,18 +28,13 @@ public class Main {
         for(int i=0; i< args.length-1; i++){
             String arg = args[i];
 
-            switch (arg){
-                case "-V":
-                    averageVotes = true;
-                    break;
-
-                case "-R":  // average metric
-                    averageMetric = true;
-                    break;
-
-                case "-C": // average character number
-                    averageCharacterNumber = true;
-                    break;
+            switch (arg) {
+                case "-V" -> // average votes
+                        averageVotes = true;
+                case "-R" ->  // average metric
+                        averageMetric = true;
+                case "-C" -> // average character number
+                        averageCharacterNumber = true;
             }
             CsvMetricProcessor.executeOptions(averageVotes,averageMetric, averageCharacterNumber);
         }
@@ -51,7 +43,7 @@ public class Main {
 
         if(averageMetric) ConsoleProcessor.PrintAverageSeriesRating(CsvMetricProcessor.getAverageRating());
 
-        if(averageCharacterNumber) ConsoleProcessor.printAveracheCharacterNumber(CsvMetricProcessor.getAverageCharacterNumber());
+        if(averageCharacterNumber) ConsoleProcessor.printAverageCharacterNumber(CsvMetricProcessor.getAverageCharacterNumber());
 
     }
 }

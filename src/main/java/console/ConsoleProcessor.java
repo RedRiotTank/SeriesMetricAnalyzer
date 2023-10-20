@@ -2,7 +2,7 @@ package console;
 
 public class ConsoleProcessor {
 
-    public static void printAveracheCharacterNumber(Float average){
+    public static void printAverageCharacterNumber(Float average){
         System.out.println("Average character number is: " + average);
         System.out.println();
     }
@@ -30,7 +30,7 @@ public class ConsoleProcessor {
 
     public static void printHelpMessage() {
         // Print a help message with available options.
-        System.out.println("Usage: java -jar SeriesMetricAnalyzer.jar <options> [folderPath]"); //folderpath = allepisodes
+        System.out.println("Usage: java -jar SeriesMetricAnalyzer.jar <options> [folderPath]");
         System.out.println("Options:");
 
     }
