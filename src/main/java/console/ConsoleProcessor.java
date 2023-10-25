@@ -28,6 +28,10 @@ public class ConsoleProcessor {
         System.err.println("Error: Not enough parameters.");
     }
 
+    public static void synonymFormatError() {
+        System.err.println("Error: Synonym file format is not .chs.");
+    }
+
     public static void printHelpMessage() {
         // Print a help message with available options.
         System.out.println("Usage: java -jar SeriesMetricAnalyzer.jar <options> [folderPath]");
