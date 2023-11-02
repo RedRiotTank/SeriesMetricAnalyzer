@@ -5,16 +5,22 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
+import console.ConsoleProcessor;
+import customanalyzers.SynomAnalyzer;
+import indexprocessor.Indexer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public class CsvMetricProcessor {
+
+    private static SynomAnalyzer characterAnalyzer;
+    private static SynomAnalyzer locationAnalyzer;
+
     private static float averageVotes = -1;
     private static float averageRating = -1;
     private static float averageCharacterNumber = -1;
@@ -33,7 +39,7 @@ public class CsvMetricProcessor {
         return averageCharacterNumber;
     }
 
-    public static void executeOptions(boolean averageVotes, boolean averageRating, boolean averageCharacterNumber) {
+    public static void executeOptions(boolean averageVotes, boolean averageRating, boolean averageCharacterNumber, boolean generateIndex) throws IOException {
         float sumVotes = 0;
         float sumRating = 0;
         float sumCharacterNumber = 0;
@@ -48,21 +54,49 @@ public class CsvMetricProcessor {
         if (averageVotes) CsvMetricProcessor.averageVotes = sumVotes / episodeCount;
         if (averageRating) CsvMetricProcessor.averageRating = sumRating / episodeCount;
         if (averageCharacterNumber) CsvMetricProcessor.averageCharacterNumber = sumCharacterNumber / episodeCount;
+        if(generateIndex) Indexer.index(episodesData);
     }
 
-    public static void loadEpisodeDataModels(Set<File> csvFiles) {
+    public static void loadEpisodeDataModels(Set<File> csvFiles, Map<String,File> extendedCsvFiles) {
+
+        if(extendedCsvFiles == null || extendedCsvFiles.isEmpty()){
+            EpisodeDataModel.setExtendedDataLoaded(false);
+        } else {
+            EpisodeDataModel.setExtendedDataLoaded(true);
+        }
         for (File file : csvFiles) {
-            readAndParseCSV(file);
+            String capNumber = file.getName().split("_")[0];
+
+            readAndParseCSV(file,extendedCsvFiles.get(capNumber));
+
         }
     }
 
-    private static void readAndParseCSV(File file) {
+
+
+
+    private static void readAndParseCSV(File file, File extendedFile) {
         try (CSVReader csvReader = createCSVReader(file)) {
             String[] nextRecord;
+
             while ((nextRecord = csvReader.readNext()) != null) {
-                EpisodeDataModel episodeData = new EpisodeDataModel(nextRecord);
+                ArrayList<EpisoDialog> episoDialogs = new ArrayList<>();
+
+                if(extendedFile != null){
+                    try (CSVReader extendedCsvReader = createCSVReader(extendedFile)) {
+                        String[] extendedNextRecord;
+                        while ((extendedNextRecord = extendedCsvReader.readNext()) != null) {
+                            EpisoDialog episoDialog = new EpisoDialog(extendedNextRecord);
+                            episoDialogs.add(episoDialog);
+                        }
+                    }
+                }
+
+                EpisodeDataModel episodeData = new EpisodeDataModel(nextRecord, episoDialogs);
+
                 episodesData.put(episodeData.getEpisode_id(), episodeData);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (CsvValidationException | ParseException e) {
@@ -77,5 +111,21 @@ public class CsvMetricProcessor {
                 .build();
         CSVReaderBuilder csvReaderBuilder = new CSVReaderBuilder(new FileReader(file)).withCSVParser(parser).withSkipLines(1);
         return csvReaderBuilder.build();
+    }
+
+    public static void setCharacterAnalyzer(SynomAnalyzer characterAnalyzer) {
+        CsvMetricProcessor.characterAnalyzer = characterAnalyzer;
+    }
+
+    public static SynomAnalyzer getCharacterAnalyzer() {
+        return characterAnalyzer;
+    }
+
+    public static void setLocationAnalyzer(SynomAnalyzer locationAnalyzer) {
+        CsvMetricProcessor.locationAnalyzer = locationAnalyzer;
+    }
+
+    public static SynomAnalyzer getLocationAnalyzer() {
+        return locationAnalyzer;
     }
 }

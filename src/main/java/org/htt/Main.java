@@ -4,9 +4,11 @@ import console.ConsoleProcessor;
 import csvmetricprocessor.CsvMetricProcessor;
 import customanalyzers.SynomAnalyzer;
 import files.FileProcessor;
+import indexprocessor.Indexer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -22,57 +24,73 @@ public class Main {
         }
 
         String lastArg = args[args.length - 1];
-        FileProcessor.folderInitializer(lastArg);
-        CsvMetricProcessor.loadEpisodeDataModels(FileProcessor.getCsvFiles());
+        SynomAnalyzer characterAnalyzer = null;
+        String extendedFolderPath = null;
 
         boolean
                 averageVotes = false,
                 averageMetric = false,
-                averageCharacterNumber = false;
+                averageCharacterNumber = false,
+                generateIndex = false ;
 
-        SynomAnalyzer synomAnalyzer = null;
 
         for(int i=0; i< args.length-1; i++){
             String arg = args[i];
 
-            if(Objects.equals(arg, "-analyzer")){
-                if(!args[i+1].endsWith(".chs")){
-                    synonymFormatError();
-                    printHelpMessage();
-                    exit(1);
-                } else {
-                    i++;
-                    synomAnalyzer = new SynomAnalyzer(FileProcessor.generateSynomMap(args[i]));
-                    System.out.println(synomAnalyzer.namesMap);
-                }
-            }
 
             switch (arg) {
-                case "-V": // average votes
-                        averageVotes = true;
-                        break;
-                case "-R":  // average metric
-                        averageMetric = true;
-                        break;
-                case "-C": // average character number
-                        averageCharacterNumber = true;
-                        break;
-                case "-analyzer":
-                    String text = "Mariom fat tony D'Amico";
-                    TokenStream tokenStream = synomAnalyzer.tokenStream("field", text);
-
-                    // Obtener el atributo CharTermAttribute para acceder a los tokens
-                    CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
-
-                    // Procesar y mostrar los tokens resultantes
-                    tokenStream.reset();
-                    while (tokenStream.incrementToken()) {
-                        System.out.println(charTermAttribute.toString());
+                case "-chs":
+                    if(!args[i+1].endsWith(".chs")){
+                        synonymFormatError();
+                        printHelpMessage();
+                        exit(1);
+                    } else {
+                        i++;
+                        CsvMetricProcessor.setCharacterAnalyzer(new SynomAnalyzer(FileProcessor.generateSynomMap(args[i])));
                     }
                     break;
+                case "-lcs":
+                    if(!args[i+1].endsWith(".lcs")){
+                        synonymFormatError();
+                        printHelpMessage();
+                        exit(1);
+                    } else {
+                        i++;
+                        CsvMetricProcessor.setLocationAnalyzer(new SynomAnalyzer(FileProcessor.generateSynomMap(args[i])));
+                    }
+                    break;
+                case "-ef":
+                    extendedFolderPath = args[i+1];
+                    i++;
+                    break;
+
+                case "-V": // average votes
+                    averageVotes = true;
+                    break;
+
+                case "-R":  // average metric
+                    averageMetric = true;
+                    break;
+
+                case "-C": // average character number
+                    averageCharacterNumber = true;
+                    break;
+
+                case "-I":
+                    generateIndex = true;
+                    break;
             }
-            CsvMetricProcessor.executeOptions(averageVotes,averageMetric, averageCharacterNumber);
+
         }
+
+        FileProcessor.folderInitializer(lastArg);
+
+        if(extendedFolderPath != null)
+            FileProcessor.extendedFolderInitializer(extendedFolderPath);
+
+        CsvMetricProcessor.loadEpisodeDataModels(FileProcessor.getCsvFiles(), FileProcessor.getExtendedCsvFiles());
+
+        CsvMetricProcessor.executeOptions(averageVotes,averageMetric, averageCharacterNumber, generateIndex);
 
         if(averageVotes) ConsoleProcessor.printAverageVoteNumber(CsvMetricProcessor.getAverageVotes());
 

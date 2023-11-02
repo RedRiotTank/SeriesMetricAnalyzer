@@ -8,6 +8,8 @@ import java.util.Date;
 
 public class EpisodeDataModel {
 
+    private static boolean extendedDataLoaded = false;
+
     private final int episode_id;
     private final String spoken_words;
     private final ArrayList<String> character_list;
@@ -21,9 +23,15 @@ public class EpisodeDataModel {
     private final float us_viewers_in_millions;
     private final float views;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    EpisodeDataModel(String[] data) throws ParseException {
+    private ArrayList<EpisoDialog> episodeDialogData = new ArrayList<>();
+
+    public void loadExtendedData(){
+
+    }
+
+    EpisodeDataModel(String[] data, ArrayList<EpisoDialog> episodeDialogData) throws ParseException {
 
 
         this.episode_id = Integer.parseInt(data[1]);
@@ -38,6 +46,7 @@ public class EpisodeDataModel {
         this.title = data[10];
         this.us_viewers_in_millions = Float.parseFloat(data[11]);
         this.views = Float.parseFloat(data[12]);
+        this.episodeDialogData = episodeDialogData;
     }
 
     public int getEpisode_id() {
@@ -88,7 +97,19 @@ public class EpisodeDataModel {
         return views;
     }
 
-    public static SimpleDateFormat getDateFormat() {
+    public SimpleDateFormat getDateFormat() {
         return dateFormat;
+    }
+
+    public ArrayList<EpisoDialog> getEpisodeDialogData() {
+        return episodeDialogData;
+    }
+
+    public static boolean isExtendedDataLoaded() {
+        return extendedDataLoaded;
+    }
+
+    public static void setExtendedDataLoaded(boolean extendedDataLoaded) {
+        EpisodeDataModel.extendedDataLoaded = extendedDataLoaded;
     }
 }
