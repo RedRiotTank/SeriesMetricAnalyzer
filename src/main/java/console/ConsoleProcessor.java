@@ -28,8 +28,12 @@ public class ConsoleProcessor {
         System.err.println("Error: Not enough parameters.");
     }
 
-    public static void synonymFormatError() {
+    public static void synonymCHSFormatError() {
         System.err.println("Error: Synonym file format is not .chs.");
+    }
+
+    public static void synonymLCSFormatError() {
+        System.err.println("Error: Synonym file format is not .lcs.");
     }
 
     public static void printHelpMessage() {

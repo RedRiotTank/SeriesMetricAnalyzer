@@ -41,7 +41,7 @@ public class Main {
             switch (arg) {
                 case "-chs":
                     if(!args[i+1].endsWith(".chs")){
-                        synonymFormatError();
+                        synonymCHSFormatError();
                         printHelpMessage();
                         exit(1);
                     } else {
@@ -51,7 +51,7 @@ public class Main {
                     break;
                 case "-lcs":
                     if(!args[i+1].endsWith(".lcs")){
-                        synonymFormatError();
+                        synonymLCSFormatError();
                         printHelpMessage();
                         exit(1);
                     } else {

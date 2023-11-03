@@ -9,6 +9,8 @@ public class EpisoDialog {
     private String fullCharacterName;
     private String location;
 
+    private String fullLocation;
+
     private String text;
 
     EpisoDialog(String[] data){
@@ -22,7 +24,13 @@ public class EpisoDialog {
             fullCharacterName = character;
         }
 
-        location = data[5];
+        location = data[5].toLowerCase();
+        if(CsvMetricProcessor.getLocationAnalyzer().namesMap.containsKey(location)){
+            fullLocation = CsvMetricProcessor.getLocationAnalyzer().namesMap.get(location);
+        } else {
+            fullLocation = location;
+        }
+
         text = data[6];
 
     }
@@ -41,6 +49,10 @@ public class EpisoDialog {
 
     public String getLocation() {
         return location;
+    }
+
+    public String getFullLocation(){
+        return fullLocation;
     }
 
     public String getText() {

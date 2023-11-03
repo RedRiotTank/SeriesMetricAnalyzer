@@ -36,6 +36,7 @@ public class Indexer {
         HashMap<String, Analyzer> fieldAnalyzers = new HashMap<>();
         fieldAnalyzers.put("spoken_words", englishAnalyzer);
         fieldAnalyzers.put("character", new StandardAnalyzer());
+        fieldAnalyzers.put("location", new StandardAnalyzer());
 
         PerFieldAnalyzerWrapper perFieldAnalyzer = new PerFieldAnalyzerWrapper(new WhitespaceAnalyzer(),fieldAnalyzers);
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(perFieldAnalyzer);
@@ -49,6 +50,9 @@ public class Indexer {
                         Document dialogDoc = new Document();
                         dialogDoc.add(new TextField("character", dialog.getCharacter(), TextField.Store.YES));
                         dialogDoc.add(new TextField("character", dialog.getFullCharacterName(), TextField.Store.NO));
+
+                        dialogDoc.add(new TextField("location", dialog.getLocation(), TextField.Store.YES));
+                        dialogDoc.add(new TextField("location", dialog.getFullLocation(), TextField.Store.NO));
 
                         dialogDoc.add(new TextField("spoken_words", dialog.getText(), TextField.Store.YES));
                         dialogDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()), StringField.Store.YES));
