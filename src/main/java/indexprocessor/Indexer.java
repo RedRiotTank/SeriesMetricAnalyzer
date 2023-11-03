@@ -8,6 +8,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
@@ -30,28 +31,25 @@ public class Indexer {
 
 
         Analyzer englishAnalyzer = new EnglishAnalyzer();
-        Analyzer chsAnalyzer = CsvMetricProcessor.getCharacterAnalyzer();
 
 
         HashMap<String, Analyzer> fieldAnalyzers = new HashMap<>();
         fieldAnalyzers.put("spoken_words", englishAnalyzer);
-        fieldAnalyzers.put("character", chsAnalyzer);
+        fieldAnalyzers.put("character", new StandardAnalyzer());
 
         PerFieldAnalyzerWrapper perFieldAnalyzer = new PerFieldAnalyzerWrapper(new WhitespaceAnalyzer(),fieldAnalyzers);
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(perFieldAnalyzer);
         try{
             IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
 
-
-
             for(EpisodeDataModel episode : episodesData.values()){
                 Document episodeDoc = new Document();
-
                 if(!episode.getEpisodeDialogData().isEmpty()){
-
                     for (EpisoDialog dialog : episode.getEpisodeDialogData()) {
                         Document dialogDoc = new Document();
                         dialogDoc.add(new TextField("character", dialog.getCharacter(), TextField.Store.YES));
+                        dialogDoc.add(new TextField("character", dialog.getFullCharacterName(), TextField.Store.NO));
+
                         dialogDoc.add(new TextField("spoken_words", dialog.getText(), TextField.Store.YES));
                         dialogDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()), StringField.Store.YES));
                         dialogDoc.add(new StringField("title", episode.getTitle(), StringField.Store.YES));
@@ -60,6 +58,7 @@ public class Indexer {
 
                 } else {
                     episodeDoc.add(new TextField("character", "-1", TextField.Store.YES));
+
                     episodeDoc.add(new TextField("spoken_words", "-1", TextField.Store.YES));
                     episodeDoc.add(new TextField("title", episode.getTitle(), TextField.Store.YES));
                     episodeDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()), StringField.Store.YES));

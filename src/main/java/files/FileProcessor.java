@@ -46,10 +46,10 @@ public class FileProcessor {
         String linea;
 
         while ((linea = br.readLine()) != null) {
-            if(!linea.endsWith("\\b")){
-                String[] line = linea.split(":");
-                map.put(line[0].toLowerCase(), line[1].toLowerCase());
-            }
+
+            String[] line = linea.split(":");
+            map.put(line[0].toLowerCase(), line[1].toLowerCase());
+
         }
 
         return map;

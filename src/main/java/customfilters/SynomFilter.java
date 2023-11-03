@@ -19,16 +19,25 @@ public class SynomFilter extends TokenFilter {
 
     @Override
     public boolean incrementToken() throws IOException {
-        if (input.incrementToken()) {
-            String word = charTermAttribute.toString();
-            if (namesMap.containsKey(word)) {
-                charTermAttribute.setEmpty();
-                charTermAttribute.append(namesMap.get(word));
-            }
-            return true;
-        } else {
-            return false;
+        String line = "";
+
+        while(input.incrementToken()){
+           line += charTermAttribute.toString() + " ";
+           charTermAttribute.setEmpty();
         }
+
+        if(line.endsWith(" "))
+            line = line.substring(0, line.length() - 1);
+
+
+        if (namesMap.containsKey(line)) {
+            charTermAttribute.append(namesMap.get(line));
+        } else {
+            charTermAttribute.append(line);
+        }
+
+        return !line.equals("");
+
     }
 
 }
