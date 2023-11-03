@@ -6,14 +6,13 @@ import org.apache.lucene.analysis.hunspell.HunspellStemFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.store.FSDirectory;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 
-public class TextEnAnalyzer extends Analyzer {
+public class EnHunspellAnalyzer extends Analyzer {
 
-    public TextEnAnalyzer(){
-        super();
+    public EnHunspellAnalyzer(){
+        //super();
     }
 
     @Override
@@ -22,8 +21,8 @@ public class TextEnAnalyzer extends Analyzer {
         Dictionary dictionary = null;
 
         try {
-            InputStream affixStream = getClass().getResourceAsStream("/en_EN.aff");
-            InputStream dictStream = getClass().getResourceAsStream("/en_EN.dic");
+            InputStream affixStream = getClass().getResourceAsStream("/en_US.aff");
+            InputStream dictStream = getClass().getResourceAsStream("/en_US.dic");
             FSDirectory directorioTemp;
 
             directorioTemp = FSDirectory.open(Paths.get("/temp"));

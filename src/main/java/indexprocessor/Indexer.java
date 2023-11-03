@@ -3,6 +3,7 @@ package indexprocessor;
 import csvmetricprocessor.CsvMetricProcessor;
 import csvmetricprocessor.EpisoDialog;
 import csvmetricprocessor.EpisodeDataModel;
+import customanalyzers.EnHunspellAnalyzer;
 import customanalyzers.SynomAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
@@ -31,7 +32,9 @@ public class Indexer {
 
 
         Analyzer englishAnalyzer = new EnglishAnalyzer();
+        Analyzer enHunspellAnalyzer = new EnHunspellAnalyzer();
 
+        System.out.println("Indexing...");
 
         HashMap<String, Analyzer> fieldAnalyzers = new HashMap<>();
         fieldAnalyzers.put("spoken_words", englishAnalyzer);
@@ -51,7 +54,11 @@ public class Indexer {
                         dialogDoc.add(new TextField("character", dialog.getFullCharacterName(), TextField.Store.NO));
 
                         dialogDoc.add(new TextField("spoken_words", dialog.getText(), TextField.Store.YES));
+
                         dialogDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()), StringField.Store.YES));
+
+                        //dialogDoc.add(new StringField("imdb_votes", String.valueOf(episode.getOriginal_air_date()), StringField.Store.YES));
+
                         dialogDoc.add(new StringField("title", episode.getTitle(), StringField.Store.YES));
                         indexWriter.addDocument(dialogDoc);
                     }
