@@ -20,11 +20,12 @@ import org.apache.lucene.store.FSDirectory;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.HashMap;
 
 public class Indexer {
 
-    public static void index(HashMap<Integer, EpisodeDataModel> episodesData) throws IOException {
+    public static void index(HashMap<Integer, EpisodeDataModel> episodesData) throws IOException, ParseException {
 
         String path = System.getProperty("user.dir") + "/index";
         Directory directory = FSDirectory.open(Paths.get(path));

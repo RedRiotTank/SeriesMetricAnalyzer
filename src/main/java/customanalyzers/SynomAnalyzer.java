@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class SynomAnalyzer extends Analyzer {
 
-    public HashMap<String, String> namesMap;
+    public HashMap<String, String> namesMap = null;
 
     public SynomAnalyzer(HashMap<String, String> namesMap) throws FileNotFoundException {
         this.namesMap = namesMap;

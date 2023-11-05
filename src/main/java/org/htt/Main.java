@@ -10,13 +10,15 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.text.ParseException;
 import java.util.Objects;
 
 import static console.ConsoleProcessor.*;
 import static java.lang.System.exit;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ParseException {
         if (args.length == 0) {
             parameterError();
             printHelpMessage();
@@ -39,26 +41,6 @@ public class Main {
 
 
             switch (arg) {
-                case "-chs":
-                    if(!args[i+1].endsWith(".chs")){
-                        synonymCHSFormatError();
-                        printHelpMessage();
-                        exit(1);
-                    } else {
-                        i++;
-                        CsvMetricProcessor.setCharacterAnalyzer(new SynomAnalyzer(FileProcessor.generateSynomMap(args[i])));
-                    }
-                    break;
-                case "-lcs":
-                    if(!args[i+1].endsWith(".lcs")){
-                        synonymLCSFormatError();
-                        printHelpMessage();
-                        exit(1);
-                    } else {
-                        i++;
-                        CsvMetricProcessor.setLocationAnalyzer(new SynomAnalyzer(FileProcessor.generateSynomMap(args[i])));
-                    }
-                    break;
                 case "-ef":
                     extendedFolderPath = args[i+1];
                     i++;
@@ -82,6 +64,30 @@ public class Main {
             }
 
         }
+
+        ClassLoader classLoader = Main.class.getClassLoader();
+        URL charactersURL = classLoader.getResource("characters.chs");
+        String charactersPath = null, locationsPath = null;
+        if(charactersURL == null){
+            ConsoleProcessor.fileNotFound("characters.chs");
+        } else {
+            charactersPath = charactersURL.getFile();
+        }
+
+        URL locationsURL = classLoader.getResource("locations.lcs");
+
+        if(locationsURL == null){
+            ConsoleProcessor.fileNotFound("locations.lcs");
+        } else {
+            locationsPath = locationsURL.getFile();
+        }
+
+        if(charactersPath != null)
+            CsvMetricProcessor.setCharacterAnalyzer(new SynomAnalyzer(FileProcessor.generateSynomMap(charactersPath)));
+
+        if(locationsPath != null)
+            CsvMetricProcessor.setLocationAnalyzer(new SynomAnalyzer(FileProcessor.generateSynomMap(locationsPath)));
+
 
         FileProcessor.folderInitializer(lastArg);
 

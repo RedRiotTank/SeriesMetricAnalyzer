@@ -18,14 +18,14 @@ public class EpisoDialog {
         time_stamp = Integer.parseInt(data[3]);
         character = data[4].toLowerCase();
 
-        if(CsvMetricProcessor.getCharacterAnalyzer().namesMap.containsKey(character)){
+        if(CsvMetricProcessor.getCharacterAnalyzer() != null && CsvMetricProcessor.getCharacterAnalyzer().namesMap.containsKey(character)){
             fullCharacterName = CsvMetricProcessor.getCharacterAnalyzer().namesMap.get(character);
         } else {
             fullCharacterName = character;
         }
 
         location = data[5].toLowerCase();
-        if(CsvMetricProcessor.getLocationAnalyzer().namesMap.containsKey(location)){
+        if(CsvMetricProcessor.getLocationAnalyzer() != null && CsvMetricProcessor.getLocationAnalyzer().namesMap.containsKey(location)){
             fullLocation = CsvMetricProcessor.getLocationAnalyzer().namesMap.get(location);
         } else {
             fullLocation = location;

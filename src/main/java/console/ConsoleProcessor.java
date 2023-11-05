@@ -2,6 +2,10 @@ package console;
 
 public class ConsoleProcessor {
 
+    public static void fileNotFound(String fileName) {
+        System.out.println("Error: File " + fileName + " not found.");
+        System.out.println("It will be ignored in the process.");
+    }
     public static void printAverageCharacterNumber(Float average){
         System.out.println("Average character number is: " + average);
         System.out.println();

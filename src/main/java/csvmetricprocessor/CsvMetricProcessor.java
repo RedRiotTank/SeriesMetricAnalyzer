@@ -39,7 +39,7 @@ public class CsvMetricProcessor {
         return averageCharacterNumber;
     }
 
-    public static void executeOptions(boolean averageVotes, boolean averageRating, boolean averageCharacterNumber, boolean generateIndex) throws IOException {
+    public static void executeOptions(boolean averageVotes, boolean averageRating, boolean averageCharacterNumber, boolean generateIndex) throws IOException, ParseException {
         float sumVotes = 0;
         float sumRating = 0;
         float sumCharacterNumber = 0;

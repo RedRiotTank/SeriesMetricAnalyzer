@@ -37,6 +37,7 @@ public class FileProcessor {
             System.exit(1);
         }
     }
+
     public static HashMap<String, String> generateSynomMap(String path) throws IOException {
         HashMap<String, String> map = new HashMap<>();
 
