@@ -112,4 +112,12 @@ public class EpisodeDataModel {
     public static void setExtendedDataLoaded(boolean extendedDataLoaded) {
         EpisodeDataModel.extendedDataLoaded = extendedDataLoaded;
     }
+
+    public String getCharactersListString(){
+        StringBuilder result = new StringBuilder();
+        for(String character : character_list){
+            result.append(character).append(" ");
+        }
+        return result.substring(0, result.length() - 1);
+    }
 }

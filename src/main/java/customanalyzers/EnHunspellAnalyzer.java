@@ -40,9 +40,9 @@ public class EnHunspellAnalyzer extends Analyzer {
 
         TokenFilter lowerCaseFilter = new LowerCaseFilter(source);
         TokenFilter stopFilter = new StopFilter(lowerCaseFilter, EnglishAnalyzer.getDefaultStopSet());
-        TokenFilter porterStemFilter = new PorterStemFilter(stopFilter);
+        TokenStream result = new PorterStemFilter(stopFilter);
 
-        TokenStream result = new HunspellStemFilter(source, dictionary, true, true);
+        //TokenStream result = new HunspellStemFilter(source, dictionary, true, true);
 
 
         return new TokenStreamComponents(source, result);
