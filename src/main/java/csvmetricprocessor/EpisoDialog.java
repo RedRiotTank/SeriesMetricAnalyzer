@@ -1,7 +1,5 @@
 package csvmetricprocessor;
 
-import java.util.HashMap;
-
 public class EpisoDialog {
     private int number;
     private int time_stamp;
@@ -37,10 +35,6 @@ public class EpisoDialog {
 
     public int getNumber() {
         return number;
-    }
-
-    public int getTime_stamp() {
-        return time_stamp;
     }
 
     public String getCharacter() {

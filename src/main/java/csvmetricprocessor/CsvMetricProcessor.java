@@ -5,7 +5,6 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
-import console.ConsoleProcessor;
 import customanalyzers.SynomAnalyzer;
 import indexprocessor.Indexer;
 
@@ -59,15 +58,12 @@ public class CsvMetricProcessor {
 
     public static void loadEpisodeDataModels(Set<File> csvFiles, Map<String,File> extendedCsvFiles) {
 
-        if(extendedCsvFiles == null || extendedCsvFiles.isEmpty()){
-            EpisodeDataModel.setExtendedDataLoaded(false);
-        } else {
-            EpisodeDataModel.setExtendedDataLoaded(true);
-        }
+        EpisodeDataModel.setExtendedDataLoaded(extendedCsvFiles != null && !extendedCsvFiles.isEmpty());
         for (File file : csvFiles) {
             String capNumber = file.getName().split("_")[0];
 
-            readAndParseCSV(file,extendedCsvFiles.get(capNumber));
+            if(extendedCsvFiles != null)
+                readAndParseCSV(file,extendedCsvFiles.get(capNumber));
 
         }
     }

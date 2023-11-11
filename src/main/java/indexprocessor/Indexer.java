@@ -1,17 +1,13 @@
 package indexprocessor;
 
-import csvmetricprocessor.CsvMetricProcessor;
 import csvmetricprocessor.EpisoDialog;
 import csvmetricprocessor.EpisodeDataModel;
 import customanalyzers.EnHunspellAnalyzer;
-import customanalyzers.SynomAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
@@ -35,7 +31,7 @@ public class Indexer {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy");
 
 
-        Analyzer englishAnalyzer = new EnglishAnalyzer();
+        // Analyzer englishAnalyzer = new EnglishAnalyzer();
         Analyzer enHunspellAnalyzer = new EnHunspellAnalyzer();
 
         System.out.println("Indexing...");

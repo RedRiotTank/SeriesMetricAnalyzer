@@ -4,7 +4,6 @@ import org.apache.lucene.analysis.*;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.en.PorterStemFilter;
 import org.apache.lucene.analysis.hunspell.Dictionary;
-import org.apache.lucene.analysis.hunspell.HunspellStemFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 
 import org.apache.lucene.store.FSDirectory;
@@ -20,8 +19,6 @@ public class EnHunspellAnalyzer extends Analyzer {
     //final Tokenizer source = new StandardTokenizer();
 
     Dictionary dictionary;
-
-    EnglishAnalyzer englishAnalyzer = new EnglishAnalyzer();
 
     public EnHunspellAnalyzer() throws IOException, ParseException {
         InputStream affixStream = getClass().getResourceAsStream("/en_US.aff"),

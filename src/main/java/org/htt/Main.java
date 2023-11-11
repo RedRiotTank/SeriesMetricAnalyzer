@@ -4,18 +4,10 @@ import console.ConsoleProcessor;
 import csvmetricprocessor.CsvMetricProcessor;
 import customanalyzers.SynomAnalyzer;
 import files.FileProcessor;
-import indexprocessor.Indexer;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
-import java.util.Objects;
-
 import static console.ConsoleProcessor.*;
-import static java.lang.System.exit;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
@@ -26,7 +18,6 @@ public class Main {
         }
 
         String lastArg = args[args.length - 1];
-        SynomAnalyzer characterAnalyzer = null;
         String extendedFolderPath = null;
 
         boolean

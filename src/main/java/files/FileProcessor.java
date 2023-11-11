@@ -25,7 +25,7 @@ public class FileProcessor {
     public static void extendedFolderInitializer(String extendedFolderPath){
         File folder = isFolder(extendedFolderPath);
 
-        for(File file : folder.listFiles()){
+        for(File file : Objects.requireNonNull(folder.listFiles())){
             if (file.getName().endsWith(".csv")){
                 String capNumber = file.getName().split("_")[0];
                 extendedCsvFiles.put(capNumber, file);

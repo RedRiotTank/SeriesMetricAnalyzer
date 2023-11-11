@@ -25,11 +25,8 @@ public class EpisodeDataModel {
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    private ArrayList<EpisoDialog> episodeDialogData = new ArrayList<>();
+    private ArrayList<EpisoDialog> episodeDialogData;
 
-    public void loadExtendedData(){
-
-    }
 
     EpisodeDataModel(String[] data, ArrayList<EpisoDialog> episodeDialogData) throws ParseException {
 
@@ -97,16 +94,8 @@ public class EpisodeDataModel {
         return views;
     }
 
-    public SimpleDateFormat getDateFormat() {
-        return dateFormat;
-    }
-
     public ArrayList<EpisoDialog> getEpisodeDialogData() {
         return episodeDialogData;
-    }
-
-    public static boolean isExtendedDataLoaded() {
-        return extendedDataLoaded;
     }
 
     public static void setExtendedDataLoaded(boolean extendedDataLoaded) {
