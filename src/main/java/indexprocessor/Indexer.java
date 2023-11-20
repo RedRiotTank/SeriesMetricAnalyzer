@@ -54,7 +54,8 @@ public class Indexer {
                         Document dialogDoc = new Document();
                         String number = String.valueOf(episode.getEpisode_id());
                         dialogDoc.add(new StringField("episode_number", number, StringField.Store.YES));
-                        dialogDoc.add(new TextField("spoken_words", dialog.getText(), TextField.Store.YES));
+                        dialogDoc.add(new TextField("spoken_words", episode.getSpoken_words(), TextField.Store.YES));
+                        dialogDoc.add(new TextField("spoken_wordsDialog", dialog.getText(), TextField.Store.YES));
                         dialogDoc.add(new TextField("character", dialog.getCharacter(), TextField.Store.YES));
                         dialogDoc.add(new TextField("character", dialog.getFullCharacterName(), TextField.Store.NO));
                         dialogDoc.add(new TextField("location", dialog.getLocation(), TextField.Store.YES));
