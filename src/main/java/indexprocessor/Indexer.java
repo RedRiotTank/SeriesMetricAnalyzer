@@ -60,11 +60,11 @@ public class Indexer {
                         dialogDoc.add(new TextField("character", dialog.getFullCharacterName(), TextField.Store.NO));
                         dialogDoc.add(new TextField("location", dialog.getLocation(), TextField.Store.YES));
                         dialogDoc.add(new TextField("location", dialog.getFullLocation(), TextField.Store.NO));
-                        dialogDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()), StringField.Store.YES));
+                        dialogDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()*10), StringField.Store.YES));
                         dialogDoc.add(new StringField("imdb_votes", String.valueOf(episode.getImdb_votes()), StringField.Store.YES));
-                        dialogDoc.add(new StringField("release_date", format.format(episode.getOriginal_air_date()), StringField.Store.YES));
+                        dialogDoc.add(new StringField("release_date", Long.toString(episode.getOriginal_air_date().getTime()), StringField.Store.YES));
                         dialogDoc.add(new StringField("season", String.valueOf(episode.getSeason()), StringField.Store.YES));
-                        dialogDoc.add(new StringField("title", episode.getTitle(), StringField.Store.YES));
+                        dialogDoc.add(new TextField("title", episode.getTitle(), StringField.Store.YES));
                         dialogDoc.add(new StringField("episode_views", String.valueOf(episode.getViews()), StringField.Store.YES));
 
                         indexWriter.addDocument(dialogDoc);
@@ -74,9 +74,9 @@ public class Indexer {
                     episodeDoc.add(new StringField("episode_number", String.valueOf(episode.getEpisode_id()), StringField.Store.YES));
                     episodeDoc.add(new TextField("spoken_words", episode.getSpoken_words(), TextField.Store.YES));
                     episodeDoc.add(new TextField("characters_list", episode.getCharactersListString(), TextField.Store.YES));
-                    episodeDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()), StringField.Store.YES));
+                    episodeDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()*10), StringField.Store.YES));
                     episodeDoc.add(new StringField("imdb_votes", String.valueOf(episode.getImdb_votes()), StringField.Store.YES));
-                    episodeDoc.add(new StringField("release_date", format.format(episode.getOriginal_air_date()), StringField.Store.YES));
+                    episodeDoc.add(new StringField("release_date", Long.toString(episode.getOriginal_air_date().getTime()), StringField.Store.YES));
                     episodeDoc.add(new StringField("season", String.valueOf(episode.getSeason()), StringField.Store.YES));
                     episodeDoc.add(new TextField("title", episode.getTitle(), TextField.Store.YES));
                     episodeDoc.add(new StringField("episode_views", String.valueOf(episode.getViews()), StringField.Store.YES));
