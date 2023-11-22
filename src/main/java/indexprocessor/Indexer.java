@@ -50,10 +50,18 @@ public class Indexer {
 
             for(EpisodeDataModel episode : episodesData.values()){
                 Document episodeDoc = new Document();
+                String number = String.valueOf(episode.getEpisode_id());
+                String season = String.valueOf(episode.getSeason());
+
+                if(number.length() == 1) number = "00" + number;
+                if(number.length() == 2) number = "0" + number;
+                if(season.length() == 1) season = "00" + season;
+                if(season.length() == 2) season = "0" + season;
+
                 if(!episode.getEpisodeDialogData().isEmpty()){
                     for (EpisoDialog dialog : episode.getEpisodeDialogData()) {
                         Document dialogDoc = new Document();
-                        String number = String.valueOf(episode.getEpisode_id());
+
                         dialogDoc.add(new StringField("episode_number", number, StringField.Store.YES));
                         dialogDoc.add(new TextField("spoken_words", dialog.getText(), TextField.Store.YES));
                         dialogDoc.add(new TextField("character", dialog.getCharacter(), TextField.Store.YES));
@@ -63,7 +71,7 @@ public class Indexer {
                         dialogDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()*10), StringField.Store.YES));
                         dialogDoc.add(new StringField("imdb_votes", String.valueOf(episode.getImdb_votes()), StringField.Store.YES));
                         dialogDoc.add(new StringField("release_date", Long.toString(episode.getOriginal_air_date().getTime()), StringField.Store.YES));
-                        dialogDoc.add(new StringField("season", String.valueOf(episode.getSeason()), StringField.Store.YES));
+                        dialogDoc.add(new StringField("season", season, StringField.Store.YES));
                         dialogDoc.add(new TextField("title", episode.getTitle(), StringField.Store.YES));
                         dialogDoc.add(new StringField("episode_views", String.valueOf(episode.getViews()), StringField.Store.YES));
 
@@ -71,13 +79,13 @@ public class Indexer {
                     }
 
                 } else {
-                    episodeDoc.add(new StringField("episode_number", String.valueOf(episode.getEpisode_id()), StringField.Store.YES));
+                    episodeDoc.add(new StringField("episode_number", number, StringField.Store.YES));
                     episodeDoc.add(new TextField("spoken_words", episode.getSpoken_words(), TextField.Store.YES));
                     episodeDoc.add(new TextField("characters_list", episode.getCharactersListString(), TextField.Store.YES));
                     episodeDoc.add(new StringField("imdb_rating", String.valueOf(episode.getImdb_rating()*10), StringField.Store.YES));
                     episodeDoc.add(new StringField("imdb_votes", String.valueOf(episode.getImdb_votes()), StringField.Store.YES));
                     episodeDoc.add(new StringField("release_date", Long.toString(episode.getOriginal_air_date().getTime()), StringField.Store.YES));
-                    episodeDoc.add(new StringField("season", String.valueOf(episode.getSeason()), StringField.Store.YES));
+                    episodeDoc.add(new StringField("season", season, StringField.Store.YES));
                     episodeDoc.add(new TextField("title", episode.getTitle(), TextField.Store.YES));
                     episodeDoc.add(new StringField("episode_views", String.valueOf(episode.getViews()), StringField.Store.YES));
 
