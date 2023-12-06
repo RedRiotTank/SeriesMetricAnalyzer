@@ -19,12 +19,14 @@ public class Main {
 
         String lastArg = args[args.length - 1];
         String extendedFolderPath = null;
+        String indexFolderPath = null;
 
         boolean
                 averageVotes = false,
                 averageMetric = false,
                 averageCharacterNumber = false,
-                generateIndex = false ;
+                generateIndex = false,
+                addtoIndex = false;
 
 
         for(int i=0; i< args.length-1; i++){
@@ -52,11 +54,17 @@ public class Main {
                 case "-I":
                     generateIndex = true;
                     break;
+                case "-A":
+                    addtoIndex = true;
+                    CsvMetricProcessor.setIndexFolderPath(args[i+1]);
+                    i++;
+                    break;
             }
 
         }
 
         ClassLoader classLoader = Main.class.getClassLoader();
+
         URL charactersURL = classLoader.getResource("characters.chs");
         String charactersPath = null, locationsPath = null;
         if(charactersURL == null){
@@ -87,7 +95,7 @@ public class Main {
 
         CsvMetricProcessor.loadEpisodeDataModels(FileProcessor.getCsvFiles(), FileProcessor.getExtendedCsvFiles());
 
-        CsvMetricProcessor.executeOptions(averageVotes,averageMetric, averageCharacterNumber, generateIndex);
+        CsvMetricProcessor.executeOptions(averageVotes,averageMetric, averageCharacterNumber, generateIndex, addtoIndex);
 
         if(averageVotes) ConsoleProcessor.printAverageVoteNumber(CsvMetricProcessor.getAverageVotes());
 

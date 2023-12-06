@@ -24,6 +24,8 @@ public class CsvMetricProcessor {
     private static float averageRating = -1;
     private static float averageCharacterNumber = -1;
 
+    private static String INDEX_FOLDER_PATH = null;
+
     private static final HashMap<Integer, EpisodeDataModel> episodesData = new HashMap<>();
 
     public static float getAverageVotes() {
@@ -38,11 +40,13 @@ public class CsvMetricProcessor {
         return averageCharacterNumber;
     }
 
-    public static void executeOptions(boolean averageVotes, boolean averageRating, boolean averageCharacterNumber, boolean generateIndex) throws IOException, ParseException {
+    public static void executeOptions(boolean averageVotes, boolean averageRating, boolean averageCharacterNumber, boolean generateIndex, boolean addtoIndex) throws IOException, ParseException {
         float sumVotes = 0;
         float sumRating = 0;
         float sumCharacterNumber = 0;
         int episodeCount = episodesData.size();
+
+        if(generateIndex && addtoIndex) throw new RuntimeException("Cannot generate and add to index at the same time");
 
         for (EpisodeDataModel episode : episodesData.values()) {
             if (averageVotes) sumVotes += episode.getImdb_votes();
@@ -54,6 +58,7 @@ public class CsvMetricProcessor {
         if (averageRating) CsvMetricProcessor.averageRating = sumRating / episodeCount;
         if (averageCharacterNumber) CsvMetricProcessor.averageCharacterNumber = sumCharacterNumber / episodeCount;
         if(generateIndex) Indexer.index(episodesData);
+        if(addtoIndex) Indexer.addtoIndex(episodesData, INDEX_FOLDER_PATH);
     }
 
     public static void loadEpisodeDataModels(Set<File> csvFiles, Map<String,File> extendedCsvFiles) {
@@ -67,9 +72,6 @@ public class CsvMetricProcessor {
 
         }
     }
-
-
-
 
     private static void readAndParseCSV(File file, File extendedFile) {
         try (CSVReader csvReader = createCSVReader(file)) {
@@ -123,5 +125,9 @@ public class CsvMetricProcessor {
 
     public static SynomAnalyzer getLocationAnalyzer() {
         return locationAnalyzer;
+    }
+
+    public static void setIndexFolderPath(String path) {
+        INDEX_FOLDER_PATH = path;
     }
 }
