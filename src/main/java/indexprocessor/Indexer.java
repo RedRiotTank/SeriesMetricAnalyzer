@@ -8,6 +8,10 @@ import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
+import org.apache.lucene.facet.FacetField;
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.sortedset.SortedSetDocValuesFacetField;
+import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
@@ -18,18 +22,27 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Indexer {
-
     public static void index(HashMap<Integer, EpisodeDataModel> episodesData) throws IOException, ParseException {
 
         String path = System.getProperty("user.dir") + "/index";
+        String facetsDirPath = System.getProperty("user.dir") + "/facets";
+
         Directory directory = FSDirectory.open(Paths.get(path));
+        FSDirectory facetsDir = FSDirectory.open(Paths.get(facetsDirPath));
+
+        // FACETAS
+        FacetsConfig facetsConfig = new FacetsConfig();
+
+        facetsConfig.setHierarchical("Character", true);
+        facetsConfig.setHierarchical("Location", true);
+        facetsConfig.setIndexFieldName("ImdbRating", "imdb_rating");
 
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy");
 
-
-        // Analyzer englishAnalyzer = new EnglishAnalyzer();
         Analyzer enHunspellAnalyzer = new EnHunspellAnalyzer();
 
         System.out.println("Indexing...");
@@ -42,10 +55,17 @@ public class Indexer {
         fieldAnalyzers.put("location", new StandardAnalyzer());
         fieldAnalyzers.put("characters_list", new WhitespaceAnalyzer());
 
+        // sets con los personajes y localizaciones (para las facetas)
+        Set<String> simsponsFamilyCharacters = FacetsData.getSimsponsFamilyCharacters();
+        Set<String> mainCharacters = FacetsData.getMainCharacters();
+        Set<String> mainLocations = FacetsData.getMainLocations();
+
         PerFieldAnalyzerWrapper perFieldAnalyzer = new PerFieldAnalyzerWrapper(new WhitespaceAnalyzer(),fieldAnalyzers);
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(perFieldAnalyzer);
+
         try{
             IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
+            DirectoryTaxonomyWriter taxonomyWriter = new DirectoryTaxonomyWriter(facetsDir); // para las facetas
 
             for(EpisodeDataModel episode : episodesData.values()){
                 Document episodeDoc = new Document();
@@ -60,6 +80,9 @@ public class Indexer {
 
                 episodeDoc.add(new FloatPoint("imdb_rating",episode.getImdb_rating()));
                 episodeDoc.add(new StoredField("imdb_rating_stored", episode.getImdb_rating()));
+                // faceta imdb
+                float imdbRating = episode.getImdb_rating();
+                episodeDoc.add(new SortedSetDocValuesFacetField("ImdbRating",Float.toString(imdbRating)));
 
                 episodeDoc.add(new LongPoint("release_date",episode.getOriginal_air_date().getTime()));
                 episodeDoc.add(new StoredField("release_date_stored", episode.getOriginal_air_date().getTime()));
@@ -85,23 +108,37 @@ public class Indexer {
                         dialogDoc.add(new TextField("character", dialog.getCharacter(), TextField.Store.YES));
                         dialogDoc.add(new TextField("character", dialog.getFullCharacterName(), TextField.Store.NO));
 
+                        // TODO: añadir mas facetas
+                        if(isInside(dialog.getCharacter(),simsponsFamilyCharacters))
+                            dialogDoc.add(new FacetField("Character","SimpsonsFamily", dialog.getCharacter()));
+                        else if(isInside(dialog.getCharacter(), mainCharacters))
+                            dialogDoc.add(new FacetField("Character", "MainCharacter", dialog.getCharacter()));
+
                         dialogDoc.add(new TextField("location", dialog.getLocation(), TextField.Store.YES));
                         dialogDoc.add(new TextField("location", dialog.getFullLocation(), TextField.Store.NO));
 
-                        indexWriter.addDocument(dialogDoc);
+                        if(isInside(dialog.getLocation(), mainLocations))
+                            dialogDoc.add(new FacetField("Location", "MainLocations", dialog.getLocation()));
+                        indexWriter.addDocument(facetsConfig.build(taxonomyWriter,dialogDoc));
                     }
 
-                indexWriter.addDocument(episodeDoc);
+                indexWriter.addDocument(facetsConfig.build(taxonomyWriter,episodeDoc));
             }
 
             indexWriter.commit();
             indexWriter.close();
+
+            taxonomyWriter.commit();
+            taxonomyWriter.close();
 
         } catch (IOException e){
             e.printStackTrace();
         }
     }
 
+    private static boolean isInside(String personaje, Set<String> personajesPrincipales) {
+        return personajesPrincipales.contains(personaje);
+    }
     public static void addtoIndex(HashMap<Integer, EpisodeDataModel> episodesData, String indexPath) {
         Directory directory;
         IndexWriterConfig indexWriterConfig;
