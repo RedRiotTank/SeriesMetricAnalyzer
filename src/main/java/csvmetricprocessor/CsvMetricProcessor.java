@@ -57,8 +57,8 @@ public class CsvMetricProcessor {
         if (averageVotes) CsvMetricProcessor.averageVotes = sumVotes / episodeCount;
         if (averageRating) CsvMetricProcessor.averageRating = sumRating / episodeCount;
         if (averageCharacterNumber) CsvMetricProcessor.averageCharacterNumber = sumCharacterNumber / episodeCount;
-        if(generateIndex) Indexer.index(episodesData);
-        if(addtoIndex) Indexer.addtoIndex(episodesData, INDEX_FOLDER_PATH);
+        if(generateIndex) Indexer.index(episodesData, null);
+        if(addtoIndex) Indexer.index(episodesData, INDEX_FOLDER_PATH);
     }
 
     public static void loadEpisodeDataModels(Set<File> csvFiles, Map<String,File> extendedCsvFiles) {
