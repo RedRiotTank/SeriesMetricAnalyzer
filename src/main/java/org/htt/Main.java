@@ -41,6 +41,16 @@ public class Main {
                     extendedFolderPath = args[i + 1];
                     i++;
                 }
+                case "-chs" -> {
+                    CsvMetricProcessor.setCharacterAnalyzer(new SynomAnalyzer(FileProcessor.generateSynonymMap(args[i + 1])));
+                    i++;
+                }
+
+                case "-lcs" -> {
+                    CsvMetricProcessor.setLocationAnalyzer(new SynomAnalyzer(FileProcessor.generateSynonymMap(args[i + 1])));
+                    i++;
+                }
+
                 case "-V" -> // average votes
                         averageVotes = true;
                 case "-R" ->  // average metric
@@ -56,7 +66,7 @@ public class Main {
             }
         }
 
-        if(extendedFolderPath != null) loadExtendedResources();
+        //if(extendedFolderPath != null) loadExtendedResources();
 
         FileProcessor.folderInitializer(lastArg);
 
