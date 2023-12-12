@@ -9,71 +9,78 @@ public class FileProcessor {
 
     private static final Set<File> csvFiles = new HashSet<>();
     private static final Map<String, File> extendedCsvFiles = new HashMap<>();
+
+
+    // ------------------- Methods -------------------//
+
     public static void folderInitializer(String folderPath) {
-        File folder = isFolder(folderPath);
+        File folder = validateFolder(folderPath);
 
-        Collections.addAll(csvFiles, Objects.requireNonNull(folder.listFiles(
-                (dir, name) -> name.toLowerCase().endsWith(".csv")
-        )));
+        csvFiles.addAll(Arrays.asList(Objects.requireNonNull(folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".csv")))));
 
-        if(csvFiles.isEmpty()){
-            ConsoleProcessor.emptyFolder();
-            System.exit(1);
+        if (csvFiles.isEmpty()) {
+            handleEmptyFolder();
         }
     }
 
-    public static void extendedFolderInitializer(String extendedFolderPath){
-        File folder = isFolder(extendedFolderPath);
+    public static void extendedFolderInitializer(String extendedFolderPath) {
+        File folder = validateFolder(extendedFolderPath);
 
-        for(File file : Objects.requireNonNull(folder.listFiles())){
-            if (file.getName().endsWith(".csv")){
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            if (file.getName().endsWith(".csv")) {
                 String capNumber = file.getName().split("_")[0];
                 extendedCsvFiles.put(capNumber, file);
             }
         }
 
-        if(extendedCsvFiles.isEmpty()){
-            ConsoleProcessor.emptyFolder();
-            System.exit(1);
+        if (extendedCsvFiles.isEmpty()) {
+            handleEmptyFolder();
         }
     }
 
-    public static HashMap<String, String> generateSynomMap(String path) throws IOException {
+    public static HashMap<String, String> generateSynonymMap(String path) throws IOException {
         HashMap<String, String> map = new HashMap<>();
 
-        File file = new File(path);
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+            String line;
 
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String linea;
-
-        while ((linea = br.readLine()) != null) {
-
-            String[] line = linea.split(":");
-            map.put(line[0].toLowerCase(), line[1].toLowerCase());
-
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(":");
+                map.put(parts[0].toLowerCase(), parts[1].toLowerCase());
+            }
         }
 
         return map;
     }
 
+    // ------------------- Internal -------------------//
 
-    public static File isFolder(String folderPath){
+    private static File validateFolder(String folderPath) {
         File folder = new File(folderPath);
 
         if (!folder.isDirectory() || (!folderPath.endsWith("/") && !folderPath.endsWith("\\"))) {
             ConsoleProcessor.notFolder();
             ConsoleProcessor.printHelpMessage();
-            System.exit(1);
+            throw new IllegalArgumentException("Invalid folder path");
         }
+
         return folder;
     }
 
+
+    // ------------------- Exceptions -------------------//
+    private static void handleEmptyFolder() {
+        ConsoleProcessor.emptyFolder();
+        throw new IllegalStateException("Folder is empty");
+    }
+
+    // ------------------- Getters -------------------//
+
     public static Set<File> getCsvFiles() {
-        return csvFiles;
+        return Collections.unmodifiableSet(csvFiles);
     }
 
     public static Map<String, File> getExtendedCsvFiles() {
-        return extendedCsvFiles;
+        return Collections.unmodifiableMap(extendedCsvFiles);
     }
-
 }

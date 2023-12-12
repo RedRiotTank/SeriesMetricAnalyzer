@@ -7,37 +7,35 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class EpisodeDataModel {
+    private final int
+            episode_id,
+            number_in_season,
+            original_air_year,
+            season;
 
-    private static boolean extendedDataLoaded = false;
+    private final float
+            imdb_rating,
+            imdb_votes,
+            us_viewers_in_millions,
+            views;
+    private final String
+            spoken_words,
+            title;
 
-    private final int episode_id;
-    private final String spoken_words;
     private final ArrayList<String> character_list;
-    private final float imdb_rating;
-    private final float imdb_votes;
-    private final int number_in_season;
+
     private final Date original_air_date;
-    private final int original_air_year;
-    private final int season;
-    private final String title;
-    private final float us_viewers_in_millions;
-    private final float views;
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final ArrayList<EpisodeDialog> episodeDialogData;
 
-    private ArrayList<EpisoDialog> episodeDialogData;
-
-
-    EpisodeDataModel(String[] data, ArrayList<EpisoDialog> episodeDialogData) throws ParseException {
-
-
+    EpisodeDataModel(String[] data, ArrayList<EpisodeDialog> episodeDialogData) throws ParseException {
         this.episode_id = Integer.parseInt(data[1]);
         this.spoken_words = data[2];
         this.character_list = new ArrayList<>(Arrays.asList(data[3].split(",")));
         this.imdb_rating = Float.parseFloat(data[4]);
         this.imdb_votes = Float.parseFloat(data[5]);
         this.number_in_season = Integer.parseInt(data[6]);
-        this.original_air_date = dateFormat.parse(data[7]);
+        this.original_air_date = (new SimpleDateFormat("yyyy-MM-dd")).parse(data[7]);
         this.original_air_year = Integer.parseInt(data[8]);
         this.season = Integer.parseInt(data[9]);
         this.title = data[10];
@@ -45,6 +43,8 @@ public class EpisodeDataModel {
         this.views = Float.parseFloat(data[12]);
         this.episodeDialogData = episodeDialogData;
     }
+
+    //--------------------Getters--------------------//
 
     public int getEpisode_id() {
         return episode_id;
@@ -94,13 +94,10 @@ public class EpisodeDataModel {
         return views;
     }
 
-    public ArrayList<EpisoDialog> getEpisodeDialogData() {
+    public ArrayList<EpisodeDialog> getEpisodeDialogData() {
         return episodeDialogData;
     }
 
-    public static void setExtendedDataLoaded(boolean extendedDataLoaded) {
-        EpisodeDataModel.extendedDataLoaded = extendedDataLoaded;
-    }
 
     public String getCharactersListString(){
         StringBuilder result = new StringBuilder();

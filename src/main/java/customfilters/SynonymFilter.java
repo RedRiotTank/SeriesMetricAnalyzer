@@ -7,12 +7,12 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class SynomFilter extends TokenFilter {
+public class SynonymFilter extends TokenFilter {
 
     private final CharTermAttribute charTermAttribute = addAttribute(CharTermAttribute.class);
     private final HashMap<String, String> namesMap;
 
-    public SynomFilter(TokenStream input, HashMap<String, String> namesMap) {
+    public SynonymFilter(TokenStream input, HashMap<String, String> namesMap) {
         super(input);
         this.namesMap = namesMap;
     }

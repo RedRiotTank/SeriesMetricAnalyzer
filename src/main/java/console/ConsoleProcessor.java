@@ -33,7 +33,6 @@ public class ConsoleProcessor {
     }
 
     public static void printHelpMessage() {
-        // Print a help message with available options.
         System.out.println("Usage: java -jar SeriesMetricAnalyzer.jar <options> [folderPath]");
         System.out.println("Options:");
 

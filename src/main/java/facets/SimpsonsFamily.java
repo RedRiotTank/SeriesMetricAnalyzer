@@ -8,30 +8,27 @@ public enum SimpsonsFamily {
     MARGE,
     BART,
     LISA,
-    MAGGIE;
+    MAGGIE,
+    ABE;
 
+    //-------- Family names set --------//
     private static final Set<String> familyNames;
-
 
     static {
         familyNames = new HashSet<>();
-        for (SimpsonsFamily member : values()) {
+        for (SimpsonsFamily member : values())
             familyNames.add(member.name().toLowerCase());
-        }
+
     }
 
-    public static Set<String> getSimpsonFamilyNames() {
-        return familyNames;
-    }
+    //-------- Public methods --------//
 
     public static boolean isSimpsonFamilyMember(String name) {
         String[] names = name.split(" ");
 
-        for (String n : names) {
-            if (familyNames.contains(n.toLowerCase())) {
+        for (String n : names)
+            if (familyNames.contains(n.toLowerCase()))
                 return true;
-            }
-        }
 
         return false;
     }
