@@ -6,5 +6,6 @@ The program will perform a tokenization, hunspell and synonymy morphological ana
 
 You can use indexes created with this app in [SeriesMetricSearcher](https://github.com/RedRiotTank/SeriesMetricSearcher) to visualize and check the index in user interface.
 
-
-![searching_process](https://github.com/user-attachments/assets/55ffe3cb-b114-4369-bb2f-2bed2e9b6f2c)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/55ffe3cb-b114-4369-bb2f-2bed2e9b6f2c" alt="searching_process">
+</p>
